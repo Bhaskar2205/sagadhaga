@@ -15,7 +15,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5 }}
-          className="text-6xl md:text-8xl tracking-[0.4em] font-light"
+          className="text-3xl sm:text-5xl md:text-7xl tracking-[0.4em] font-light"
         >
           SAGADHAGA
         </motion.h1>

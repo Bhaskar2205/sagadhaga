@@ -19,7 +19,7 @@ export default function FabricWorld() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
 
         {cities.map((city, index) => (
           <motion.div
