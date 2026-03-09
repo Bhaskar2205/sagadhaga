@@ -1,63 +1,74 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ShoppingBag } from "lucide-react";
+import { useState } from "react";
+import { ShoppingBag, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "../lib/cartStore";
 import CartDrawer from "./CartDrawer";
 
 export default function Navbar() {
 
-  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
   const [openCart, setOpenCart] = useState(false);
 
   const cart = useCartStore((state) => state.cart);
 
-  useEffect(() => {
-    const scroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-
-    window.addEventListener("scroll", scroll);
-    return () => window.removeEventListener("scroll", scroll);
-  }, []);
-
   return (
     <>
+      {/* NAVBAR */}
+
       <nav
         className="fixed top-6 left-1/2 -translate-x-1/2 z-50
-        bg-white/90 backdrop-blur-lg border border-neutral-200
-        shadow-md rounded-full px-10 py-4"
+        bg-white/95 backdrop-blur-md border border-neutral-200
+        shadow-md rounded-full px-6 md:px-10 py-4
+        w-[92%] md:w-auto"
       >
 
-        <ul className="flex items-center gap-8 md:gap-12 text-sm tracking-widest text-black">
+        <div className="flex items-center justify-between">
 
-          <li className="hover:text-neutral-500 transition cursor-pointer">
-            FABRICS
-          </li>
+          {/* MOBILE MENU BUTTON */}
 
-          <li className="hover:text-neutral-500 transition cursor-pointer">
-            STORY
-          </li>
+          <button
+            className="md:hidden text-black"
+            onClick={() => setMobileMenu(true)}
+          >
+            <Menu size={22} />
+          </button>
 
-          <li className="text-lg tracking-[0.35em] font-light">
-  <Link href="/">
-    SAGADHAGA
-  </Link>
-</li>
+          {/* DESKTOP MENU */}
 
-          <li className="hover:text-neutral-500 transition cursor-pointer">
-            COLLECTIONS
-          </li>
+          <ul className="hidden md:flex items-center gap-10 text-sm tracking-widest text-black">
 
-          <li className="hover:text-neutral-500 transition cursor-pointer">
-            STORE
-          </li>
+            <li className="hover:text-neutral-500 transition cursor-pointer">
+              CLOTHING
+            </li>
 
-          {/* Cart */}
+            <li className="hover:text-neutral-500 transition cursor-pointer">
+              JWELLERY
+            </li>
 
-          <li
-            className="relative cursor-pointer"
+            <li className="text-lg tracking-[0.35em] font-light hover:opacity-70 transition">
+              <Link href="/">
+                SAGADHAGA
+              </Link>
+            </li>
+
+            <li className="hover:text-neutral-500 transition cursor-pointer">
+              COLLECTIONS
+            </li>
+
+            <li className="hover:text-neutral-500 transition cursor-pointer">
+              <Link href="/shop">
+                STORE
+              </Link>
+            </li>
+
+          </ul>
+
+          {/* CART ICON */}
+
+          <div
+            className="relative cursor-pointer text-black"
             onClick={() => setOpenCart(true)}
           >
 
@@ -69,13 +80,72 @@ export default function Navbar() {
               </span>
             )}
 
-          </li>
+          </div>
 
-        </ul>
+        </div>
 
       </nav>
 
-      {/* Cart Drawer */}
+      {/* MOBILE MENU */}
+
+      {mobileMenu && (
+
+        <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center gap-10">
+
+          {/* CLOSE BUTTON */}
+
+          <button
+            className="absolute top-6 left-6 text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            <X size={26} />
+          </button>
+
+          <Link
+            href="/"
+            className="text-lg tracking-widest text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            SAGADHAGA
+          </Link>
+
+          <Link
+            href="/"
+            className="text-lg tracking-widest text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            FABRICS
+          </Link>
+
+          <Link
+            href="/"
+            className="text-lg tracking-widest text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            STORY
+          </Link>
+
+          <Link
+            href="/"
+            className="text-lg tracking-widest text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            COLLECTIONS
+          </Link>
+
+          <Link
+            href="/shop"
+            className="text-lg tracking-widest text-black"
+            onClick={() => setMobileMenu(false)}
+          >
+            STORE
+          </Link>
+
+        </div>
+
+      )}
+
+      {/* CART DRAWER */}
 
       <CartDrawer open={openCart} setOpen={setOpenCart} />
 

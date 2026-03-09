@@ -1,6 +1,7 @@
 import Hero from "./sections/Hero";
 import FabricWorld from "./sections/FabricWorld";
 import CraftStory from "./sections/CraftStory";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Collections from "./sections/Collections";
 import EnterStore from "./sections/EnterStore";
 
