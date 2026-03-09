@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useCartStore } from "../lib/cartStore";
+import CartDrawer from "./CartDrawer";
 
 export default function Navbar() {
+
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
+
+  const cart = useCartStore((state) => state.cart);
 
   useEffect(() => {
     const scroll = () => {
@@ -18,74 +25,60 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 
-        transition-all duration-500
-        ${
-          scrolled
-            ? "bg-black/40 backdrop-blur-lg border border-neutral-800 rounded-full px-6 md:px-10 py-4"
-            : "px-6 md:px-10 py-4"
-        }`}
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-50
+        bg-white/90 backdrop-blur-lg border border-neutral-200
+        shadow-md rounded-full px-10 py-4"
       >
-        {/* Desktop Navigation */}
-        <ul className="hidden md:flex items-center gap-12 text-sm tracking-widest text-white">
 
-          <li className="hover:text-neutral-400 transition cursor-pointer">
+        <ul className="flex items-center gap-8 md:gap-12 text-sm tracking-widest text-black">
+
+          <li className="hover:text-neutral-500 transition cursor-pointer">
             FABRICS
           </li>
 
-          <li className="hover:text-neutral-400 transition cursor-pointer">
+          <li className="hover:text-neutral-500 transition cursor-pointer">
             STORY
           </li>
 
-          <li className="text-lg tracking-[0.4em] font-light">
-            SAGADHAGA
-          </li>
+          <li className="text-lg tracking-[0.35em] font-light">
+  <Link href="/">
+    SAGADHAGA
+  </Link>
+</li>
 
-          <li className="hover:text-neutral-400 transition cursor-pointer">
+          <li className="hover:text-neutral-500 transition cursor-pointer">
             COLLECTIONS
           </li>
 
-          <li className="hover:text-neutral-400 transition cursor-pointer">
+          <li className="hover:text-neutral-500 transition cursor-pointer">
             STORE
+          </li>
+
+          {/* Cart */}
+
+          <li
+            className="relative cursor-pointer"
+            onClick={() => setOpenCart(true)}
+          >
+
+            <ShoppingBag size={20} />
+
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-black text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cart.length}
+              </span>
+            )}
+
           </li>
 
         </ul>
 
-        {/* Mobile Navigation */}
-        <div className="flex md:hidden items-center justify-between w-[260px] text-white">
-
-          <span className="tracking-[0.3em] text-sm">
-            SAGADHAGA
-          </span>
-
-          <button
-            onClick={() => setOpen(!open)}
-            className="text-xl"
-          >
-            ☰
-          </button>
-
-        </div>
       </nav>
 
-      {/* Mobile Menu */}
-      {open && (
-        <div className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-10 text-white text-xl tracking-widest">
+      {/* Cart Drawer */}
 
-          <button
-            className="absolute top-8 right-8 text-2xl"
-            onClick={() => setOpen(false)}
-          >
-            ✕
-          </button>
+      <CartDrawer open={openCart} setOpen={setOpenCart} />
 
-          <a className="hover:text-neutral-400">FABRICS</a>
-          <a className="hover:text-neutral-400">STORY</a>
-          <a className="hover:text-neutral-400">COLLECTIONS</a>
-          <a className="hover:text-neutral-400">STORE</a>
-
-        </div>
-      )}
     </>
   );
 }
