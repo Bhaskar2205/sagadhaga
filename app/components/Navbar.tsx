@@ -106,7 +106,7 @@ export default function Navbar() {
             className="text-lg tracking-widest text-black"
             onClick={() => setMobileMenu(false)}
           >
-            SAGADHAGA
+            SAGA DHAGA
           </Link>
 
           <Link
