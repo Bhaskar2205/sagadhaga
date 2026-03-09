@@ -114,7 +114,7 @@ export default function Navbar() {
             className="text-lg tracking-widest text-black"
             onClick={() => setMobileMenu(false)}
           >
-            FABRICS
+            CLOTHING
           </Link>
 
           <Link
@@ -122,7 +122,7 @@ export default function Navbar() {
             className="text-lg tracking-widest text-black"
             onClick={() => setMobileMenu(false)}
           >
-            STORY
+            JWELLERY
           </Link>
 
           <Link
