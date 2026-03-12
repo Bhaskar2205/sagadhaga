@@ -1,47 +1,157 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import Image from "next/image";
 
-const cities = ["JAIPUR", "VARANASI", "KASHMIR", "KANCHIPURAM"];
+const fabrics = [
+  {
+    city: "JAIPUR",
+    image: "/fabrics/Jaipur.png",
+    description:
+      "Jaipur is known for centuries-old hand block printing where artisans carve intricate wooden blocks and stamp patterns onto fabric.",
+    sourcing:
+      "Crafted in Rajasthan using natural dyes and traditional hand-block techniques.",
+    materials: ["Cotton", "Natural Dyes", "Hand Block Printing"],
+  },
+  {
+    city: "VARANASI",
+    image: "/fabrics/Varanasi.jpg",
+    description:
+      "Varanasi silk is one of the most luxurious textiles in the world, woven with intricate patterns and gold zari threads.",
+    sourcing:
+      "Handwoven by master weavers along the ghats of Varanasi.",
+    materials: ["Silk", "Gold Zari", "Handloom Weaving"],
+  },
+  {
+    city: "KASHMIR",
+    image: "/fabrics/Kashmir.jpg",
+    description:
+      "Kashmir fabrics are celebrated for their warmth and delicate embroidery inspired by Himalayan nature.",
+    sourcing:
+      "Created by Kashmiri artisans using centuries-old weaving traditions.",
+    materials: ["Pashmina", "Wool", "Hand Embroidery"],
+  },
+  {
+    city: "KANCHIPURAM",
+    image: "/fabrics/Kanchipuram.jpg",
+    description:
+      "Kanchipuram silk is famous for temple motifs and vibrant weaving traditions from South India.",
+    sourcing:
+      "Handwoven in Tamil Nadu by generational weaving communities.",
+    materials: ["Mulberry Silk", "Gold Zari", "Temple Weaving"],
+  },
+];
 
 export default function FabricWorld() {
+  const ref = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  const sectionIndex = useTransform(
+    scrollYProgress,
+    [0, 0.33, 0.66, 1],
+    [0, 1, 2, 3]
+  );
+
   return (
-    <section className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-center px-10">
+    <section ref={ref} className="relative h-[300vh] bg-[#f5efe6]">
 
-      <div className="text-center mb-20">
-        <h2 className="text-5xl tracking-widest mb-6">
-          FABRIC WORLDS
-        </h2>
+      {/* Sticky container */}
 
-        <p className="text-neutral-400 max-w-xl mx-auto">
-          The most iconic textile cities of India are coming together in one
-          place. Their stories will unfold soon.
-        </p>
-      </div>
+      <div className="sticky top-0 h-screen flex">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+        {/* LEFT IMAGE AREA */}
 
-        {cities.map((city, index) => (
-          <motion.div
-            key={city}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2 }}
-            className="border border-neutral-800 backdrop-blur px-14 py-16 text-center hover:border-white transition duration-500"
+        <div className="relative w-1/2 h-screen overflow-hidden">
+
+          {fabrics.map((fabric, i) => (
+
+            <motion.div
+              key={fabric.city}
+              className="absolute inset-0"
+              style={{
+                opacity: useTransform(sectionIndex, (v) =>
+                  Math.round(v) === i ? 1 : 0
+                ),
+              }}
+            >
+
+              <Image
+                src={fabric.image}
+                alt={fabric.city}
+                fill
+                priority
+                className="object-cover"
+              />
+
+            </motion.div>
+
+          ))}
+
+        </div>
+
+        {/* RIGHT TEXT AREA */}
+
+        <div className="w-1/2 flex items-center justify-center px-12 md:px-20">
+
+<div className="max-w-xl w-full min-h-[420px] relative">
+
+  {fabrics.map((fabric, i) => (
+
+    <motion.div
+      key={fabric.city}
+      style={{
+        opacity: useTransform(sectionIndex, (v) =>
+          Math.round(v) === i ? 1 : 0
+        ),
+        y: useTransform(sectionIndex, (v) =>
+          Math.round(v) === i ? 0 : 30
+        ),
+      }}
+      className="absolute inset-0 flex flex-col justify-center"
+    >
+
+      <h2 className="text-4xl md:text-5xl tracking-[0.35em] text-[#3b3028] mb-8">
+        {fabric.city}
+      </h2>
+
+      <p className="text-[#6e5e52] leading-relaxed mb-6">
+        {fabric.description}
+      </p>
+
+      <p className="text-[#7a6a5d] mb-8">
+        <span className="font-semibold">Sourcing:</span>{" "}
+        {fabric.sourcing}
+      </p>
+
+      <div className="flex flex-wrap gap-3">
+
+        {fabric.materials.map((m) => (
+
+          <span
+            key={m}
+            className="border border-[#d9c9bb] px-4 py-2 rounded-full text-sm text-[#6e5e52]"
           >
-            <p className="text-lg tracking-widest">{city}</p>
+            {m}
+          </span>
 
-            <p className="text-xs text-neutral-500 mt-4">
-              REVEALING SOON
-            </p>
-          </motion.div>
         ))}
 
       </div>
 
-      <p className="text-neutral-500 text-sm mt-16 tracking-widest">
-        THE JOURNEY OF THREADS BEGINS SOON
-      </p>
+    </motion.div>
+
+  ))}
+
+</div>
+
+</div>
+
+      </div>
 
     </section>
   );

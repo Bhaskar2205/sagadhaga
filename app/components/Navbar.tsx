@@ -18,18 +18,24 @@ export default function Navbar() {
       {/* NAVBAR */}
 
       <nav
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50
-        bg-white/95 backdrop-blur-md border border-neutral-200
-        shadow-md rounded-full px-6 md:px-10 py-4
-        w-[92%] md:w-auto"
+        className="
+        fixed top-6 left-1/2 -translate-x-1/2 z-50
+        bg-white/70 backdrop-blur-xl
+        border border-white/40
+        shadow-[0_10px_40px_rgba(0,0,0,0.08)]
+        rounded-full
+        px-6 md:px-12 py-4
+        w-[92%] md:w-auto
+        transition hover:shadow-[0_12px_50px_rgba(0,0,0,0.12)]
+        "
       >
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-8">
 
           {/* MOBILE MENU BUTTON */}
 
           <button
-            className="md:hidden text-black"
+            className="md:hidden text-[#3b3028]"
             onClick={() => setMobileMenu(true)}
           >
             <Menu size={22} />
@@ -37,30 +43,34 @@ export default function Navbar() {
 
           {/* DESKTOP MENU */}
 
-          <ul className="hidden md:flex items-center gap-10 text-sm tracking-widest text-black">
+          <ul className="hidden md:flex items-center gap-12 text-sm tracking-widest text-[#3b3028]">
 
-            <li className="hover:text-neutral-500 transition cursor-pointer">
-              CLOTHING
+            <li className="relative group cursor-pointer">
+              <Link href="/clothing">CLOTHING</Link>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
-            <li className="hover:text-neutral-500 transition cursor-pointer">
-              JWELLERY
+            <li className="relative group cursor-pointer">
+              <Link href="/jewellery">JEWELLERY</Link>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
+
+            {/* BRAND */}
 
             <li className="text-lg tracking-[0.35em] font-light hover:opacity-70 transition">
               <Link href="/">
-                SAGADHAGA
+                SAGA&nbsp;&nbsp;DHAGA
               </Link>
             </li>
 
-            <li className="hover:text-neutral-500 transition cursor-pointer">
-              COLLECTIONS
+            <li className="relative group cursor-pointer">
+              <Link href="/collections">COLLECTIONS</Link>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
-            <li className="hover:text-neutral-500 transition cursor-pointer">
-              <Link href="/shop">
-                STORE
-              </Link>
+            <li className="relative group cursor-pointer">
+              <Link href="/shop">STORE</Link>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
           </ul>
@@ -68,14 +78,14 @@ export default function Navbar() {
           {/* CART ICON */}
 
           <div
-            className="relative cursor-pointer text-black"
+            className="relative cursor-pointer text-[#3b3028] hover:scale-105 transition"
             onClick={() => setOpenCart(true)}
           >
 
             <ShoppingBag size={20} />
 
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-black text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 bg-[#3b3028] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {cart.length}
               </span>
             )}
@@ -90,12 +100,12 @@ export default function Navbar() {
 
       {mobileMenu && (
 
-        <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center gap-10">
+        <div className="fixed inset-0 bg-[#f5efe6] z-50 flex flex-col items-center justify-center gap-10">
 
           {/* CLOSE BUTTON */}
 
           <button
-            className="absolute top-6 left-6 text-black"
+            className="absolute top-6 left-6 text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
             <X size={26} />
@@ -103,31 +113,31 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="text-lg tracking-widest text-black"
+            className="text-lg tracking-[0.35em] text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
             SAGA DHAGA
           </Link>
 
           <Link
-            href="/"
-            className="text-lg tracking-widest text-black"
+            href="/clothing"
+            className="text-lg tracking-widest text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
             CLOTHING
           </Link>
 
           <Link
-            href="/"
-            className="text-lg tracking-widest text-black"
+            href="/jewellery"
+            className="text-lg tracking-widest text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
-            JWELLERY
+            JEWELLERY
           </Link>
 
           <Link
-            href="/"
-            className="text-lg tracking-widest text-black"
+            href="/collections"
+            className="text-lg tracking-widest text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
             COLLECTIONS
@@ -135,7 +145,7 @@ export default function Navbar() {
 
           <Link
             href="/shop"
-            className="text-lg tracking-widest text-black"
+            className="text-lg tracking-widest text-[#3b3028]"
             onClick={() => setMobileMenu(false)}
           >
             STORE
