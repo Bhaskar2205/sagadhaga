@@ -25,12 +25,12 @@ export default function FounderStory() {
           className="relative h-[420px] md:h-[520px] rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.15)]"
         >
 
-          <Image
+          {/* <Image
             src="/founder.png"
             alt="Juhi Jainani - Founder of Sagadhaga"
             fill
             className="object-cover"
-          />
+          /> */}
 
           {/* image vignette */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -54,10 +54,10 @@ export default function FounderStory() {
           </p>
 
           {/* name */}
-
+{/* 
           <h2 className="text-4xl md:text-5xl tracking-[0.32em] text-[#3b3028] mb-3">
             JUHI JAINANI
-          </h2>
+          </h2> */}
 
           <p className="text-sm tracking-widest text-[#6e5e52] mb-8">
             Founder, SAGA DHAGA
