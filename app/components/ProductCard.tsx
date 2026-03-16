@@ -70,7 +70,7 @@ export default function ProductCard({ product }: any) {
 </p>
 
         <p className="text-xs text-neutral-600 mt-1">
-                    Handcrafted Jewellery
+                    HANDCRAFTED BY SAGA DHAGA
         </p>
 
         <p className="mt-2 text-sm font-semibold text-black">
