@@ -5,6 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Hero() {
+  const sagaLetters = "SAGA".split("");
+  const dhagaLetters = "DHAGA".split("");
+
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#f5efe6]">
 
@@ -14,7 +17,7 @@ export default function Hero() {
         alt="Sagadhaga Interior"
         fill
         priority
-        className="object-cover brightness-95 contrast-110"
+        className="object-cover object-[center_72%] brightness-95 contrast-110"
       />
 
       {/* Light beige overlay (reduced for realism) */}
@@ -35,46 +38,186 @@ export default function Hero() {
       <div className="absolute inset-0 opacity-[0.035] bg-[url('/grain.png')]"></div>
 
       {/* hero content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
 
         {/* soft blur plate behind text */}
         <div className="absolute w-[900px] h-[400px] bg-[#f5efe6]/60 blur-[120px]"></div>
 
         {/* small luxury label */}
         <motion.p
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ delay: 0.2 }}
-  className="relative text-xs tracking-[0.55em] text-[#6f5c4e] mb-6 font-medium"
+  initial={{ opacity: 0, y: -8 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 2.15, duration: 0.6, ease: "easeOut" }}
+  className="relative mb-8 rounded-full bg-[#f6efe7]/60 px-4 py-1 text-xs font-semibold tracking-[0.48em] text-[#4a382d] backdrop-blur-sm"
 >
   LUXURY HOME TEXTILES
 </motion.p>
 
-        {/* Brand Name */}
-        <motion.h1
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="relative flex justify-center items-center gap-14 md:gap-20 text-5xl md:text-7xl font-light text-[#3b3028]"
-        >
-          <span className="tracking-[0.32em]">SAGA</span>
-          <span className="tracking-[0.32em]">DHAGA</span>
-        </motion.h1>
-
-        {/* decorative divider */}
+        {/* Brand Name - soft 3D layered treatment */}
         <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "150px" }}
-          transition={{ delay: 0.7, duration: 1 }}
-          className="relative h-[1px] mt-8 bg-gradient-to-r from-transparent via-[#b89a82] to-transparent"
-        />
+          initial={{ opacity: 0, y: 48 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1 }}
+          className="relative"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              boxShadow: [
+                "0 0 0 rgba(109,74,54,0.12)",
+                "0 0 22px rgba(109,74,54,0.24)",
+                "0 0 0 rgba(109,74,54,0.12)",
+              ],
+            }}
+            transition={{
+              opacity: { duration: 0.7, delay: 0.6 },
+              boxShadow: { duration: 4.4, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="relative overflow-hidden rounded-[24px] border border-[#6d4a36]/35 bg-[#f6eee3]/38 px-14 py-8 backdrop-blur-[2px]"
+          >
+            {/* animated dashed box border */}
+            <motion.span
+              aria-hidden
+              animate={{ backgroundPositionX: ["0px", "-34px"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+              className="pointer-events-none absolute left-0 right-0 top-0 h-[4px]"
+              style={{
+                backgroundImage:
+                    "repeating-linear-gradient(to right, rgba(109,74,54,0.98) 0 20px, rgba(109,74,54,0.22) 20px 34px)",
+              }}
+            />
+            <motion.span
+              aria-hidden
+              animate={{ backgroundPositionX: ["-34px", "0px"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+              className="pointer-events-none absolute bottom-0 left-0 right-0 h-[4px]"
+              style={{
+                backgroundImage:
+                    "repeating-linear-gradient(to right, rgba(109,74,54,0.98) 0 20px, rgba(109,74,54,0.22) 20px 34px)",
+              }}
+            />
+            <motion.span
+              aria-hidden
+              animate={{ backgroundPositionY: ["0px", "34px"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+              className="pointer-events-none absolute bottom-0 left-0 top-0 w-[4px]"
+              style={{
+                backgroundImage:
+                    "repeating-linear-gradient(to bottom, rgba(109,74,54,0.98) 0 20px, rgba(109,74,54,0.22) 20px 34px)",
+              }}
+            />
+            <motion.span
+              aria-hidden
+              animate={{ backgroundPositionY: ["34px", "0px"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+              className="pointer-events-none absolute bottom-0 right-0 top-0 w-[4px]"
+              style={{
+                backgroundImage:
+                    "repeating-linear-gradient(to bottom, rgba(109,74,54,0.98) 0 20px, rgba(109,74,54,0.22) 20px 34px)",
+              }}
+            />
+            <motion.span
+              aria-hidden
+              initial={{ x: "-110%", opacity: 0 }}
+              animate={{ x: "110%", opacity: [0, 0.38, 0] }}
+              transition={{ duration: 1.4, delay: 0.9, ease: "easeOut", repeat: Infinity, repeatDelay: 2.2 }}
+              className="pointer-events-none absolute inset-y-0 left-0 w-[28%] bg-gradient-to-r from-transparent via-white/45 to-transparent blur-[1px]"
+            />
+
+            <h1 className="relative flex items-center justify-center gap-12 text-5xl font-normal text-[#2f251f] md:gap-20 md:text-7xl">
+            <span className="relative inline-flex tracking-[0.3em]">
+              {sagaLetters.map((letter, index) => (
+                <motion.span
+                  key={`saga-${letter}-${index}`}
+                  initial={{ opacity: 0, x: -10, scale: 0.92 }}
+                  animate={{
+                    opacity: [0, 1, 1, 1],
+                    x: [-10, 0, 0, 0],
+                    scale: [0.92, 1, 1, 1],
+                    textShadow: [
+                      "0 0 0 rgba(255,255,255,0)",
+                      "0 0 14px rgba(255,245,230,0.95)",
+                      "0 0 2px rgba(255,245,230,0.2)",
+                      "0 0 2px rgba(255,245,230,0.2)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 2.6,
+                    delay: 0.42 + index * 0.11,
+                    ease: "easeOut",
+                  }}
+                  className="relative text-[#6d4a36]"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute left-[2px] top-[3px] text-[#3f291d]/70 blur-[0.2px]"
+                  >
+                    {letter}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute left-[1px] top-[1px] text-[#f2e1d0]/80"
+                  >
+                    {letter}
+                  </span>
+                  <span className="relative [text-shadow:0_1px_0_#f1e0ce,0_2px_0_#dcbfa6,0_3px_0_#b89477,0_10px_18px_rgba(58,36,24,0.42)]">
+                    {letter}
+                  </span>
+                </motion.span>
+              ))}
+            </span>
+            <span className="relative inline-flex tracking-[0.3em]">
+              {dhagaLetters.map((letter, index) => (
+                <motion.span
+                  key={`dhaga-${letter}-${index}`}
+                  initial={{ opacity: 0, x: -10, scale: 0.92 }}
+                  animate={{
+                    opacity: [0, 1, 1, 1],
+                    x: [-10, 0, 0, 0],
+                    scale: [0.92, 1, 1, 1],
+                    textShadow: [
+                      "0 0 0 rgba(255,255,255,0)",
+                      "0 0 14px rgba(255,245,230,0.95)",
+                      "0 0 2px rgba(255,245,230,0.2)",
+                      "0 0 2px rgba(255,245,230,0.2)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 2.6,
+                    delay: 1 + index * 0.11,
+                    ease: "easeOut",
+                  }}
+                  className="relative text-[#6d4a36]"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute left-[2px] top-[3px] text-[#3f291d]/70 blur-[0.2px]"
+                  >
+                    {letter}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute left-[1px] top-[1px] text-[#f2e1d0]/80"
+                  >
+                    {letter}
+                  </span>
+                  <span className="relative [text-shadow:0_1px_0_#f1e0ce,0_2px_0_#dcbfa6,0_3px_0_#b89477,0_10px_18px_rgba(58,36,24,0.42)]">
+                    {letter}
+                  </span>
+                </motion.span>
+              ))}
+            </span>
+            </h1>
+          </motion.div>
+        </motion.div>
 
         {/* tagline */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="relative mt-8 text-sm tracking-[0.40em] text-[#6e5e52]"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.55, duration: 0.6, ease: "easeOut" }}
+          className="relative mt-8 rounded-full bg-[#f6efe7]/58 px-5 py-1 text-sm font-medium tracking-[0.34em] text-[#4a382d] backdrop-blur-sm"
         >
           WHERE THREADS BECOME STORIES
         </motion.p>
@@ -83,18 +226,30 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
-          className="relative mt-12 flex gap-6 flex-wrap justify-center"
+          transition={{ delay: 1.25 }}
+          className="relative mt-12 flex flex-wrap justify-center gap-5"
         >
-          <Link href="/shop">
-  <button className="px-10 py-3 bg-[#b89a82] text-white rounded-full text-sm tracking-widest hover:bg-[#a9876f] transition shadow-md">
-    SHOP COLLECTION
-  </button>
-</Link>
+          <Link
+            href="/shop"
+            className="group relative overflow-hidden rounded-full border border-[#d6b79b]/70 bg-gradient-to-r from-[#6d4a36] to-[#513527] px-10 py-3 text-sm tracking-[0.2em] text-[#fff7ef] shadow-[0_14px_30px_rgba(53,34,22,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(53,34,22,0.42)]"
+          >
+            <motion.span
+              aria-hidden
+              initial={{ opacity: 0, scale: 1 }}
+              animate={{ opacity: [0, 0.5, 0], scale: [1, 1.1, 1.18] }}
+              transition={{ delay: 3.15, duration: 0.85, ease: "easeInOut" }}
+              className="pointer-events-none absolute -inset-[4px] rounded-full border border-[#e8d6c4]/80"
+            />
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+            <span className="relative">SHOP COLLECTION</span>
+          </Link>
 
-          <button className="px-10 py-3 border border-[#b89a82] text-[#6e5e52] rounded-full text-sm tracking-widest hover:bg-[#b89a82] hover:text-white transition">
+          <Link
+            href="/collections"
+            className="rounded-full border border-[#c79f80]/80 bg-[#f8f1e7]/78 px-10 py-3 text-sm tracking-[0.2em] text-[#5a4335] shadow-[0_10px_24px_rgba(95,66,45,0.14)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:bg-[#b99578] hover:text-white hover:shadow-[0_16px_28px_rgba(95,66,45,0.24)]"
+          >
             EXPLORE
-          </button>
+          </Link>
         </motion.div>
 
         {/* floating luxury badge */}
@@ -110,9 +265,9 @@ export default function Hero() {
 
       {/* scroll indicator */}
       <motion.div
-        animate={{ y: [0, 12, 0] }}
+        animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[#8a7566] text-xs tracking-[0.4em]"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 rounded-full bg-[#f6eee3]/68 px-4 py-1 text-xs font-medium tracking-[0.4em] text-[#4a382d] shadow-[0_8px_20px_rgba(44,30,22,0.16)] backdrop-blur-sm"
       >
         SCROLL
       </motion.div>
