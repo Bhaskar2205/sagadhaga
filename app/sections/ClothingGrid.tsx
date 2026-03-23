@@ -21,13 +21,13 @@ export default async function ClothingGrid() {
           A curated selection of contemporary clothing designed for comfort, elegance and everyday style.
         </p>
 
-        <div className="w-16 h-[1px] bg-neutral-400 mx-auto mt-6"></div>
+        <div className="w-16 h-px bg-neutral-400 mx-auto mt-6"></div>
 
       </div>
 
       {/* Grid */}
 
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-14">
+      <div className="max-w-350 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-14">
 
         {products.map((product: any) => (
           <ProductCard key={product.id} product={product} />

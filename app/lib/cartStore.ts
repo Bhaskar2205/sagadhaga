@@ -3,6 +3,7 @@ import { create } from "zustand";
 type CartItem = {
   id: string;
   name: string;
+  quantity: number;
   price: number;
   image: string;
   variantId: string;
@@ -69,9 +70,25 @@ export const useCartStore = create<CartStore>((set) => ({
       }
 
       // 4️⃣ Update local cart state
-      set((state) => ({
-        cart: [...state.cart, product],
-      }));
+      set((state) => {
+        const existingItem = state.cart.find(
+          (item) => item.variantId === product.variantId
+        );
+      
+        if (existingItem) {
+          return {
+            cart: state.cart.map((item) =>
+              item.variantId === product.variantId
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            ),
+          };
+        }
+      
+        return {
+          cart: [...state.cart, { ...product, quantity: 1 }],
+        };
+      });
 
     } catch (error) {
 

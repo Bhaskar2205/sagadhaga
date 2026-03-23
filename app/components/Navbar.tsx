@@ -47,12 +47,12 @@ export default function Navbar() {
 
             <li className="relative group cursor-pointer">
               <Link href="/clothing">CLOTHING</Link>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
             <li className="relative group cursor-pointer">
               <Link href="/jewellery">JEWELLERY</Link>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
             {/* BRAND */}
@@ -64,13 +64,12 @@ export default function Navbar() {
             </li>
 
             <li className="relative group cursor-pointer">
-              <Link href="/collections">COLLECTIONS</Link>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
+            <Link href="/homedecor">HOMEDECOR</Link>              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
             <li className="relative group cursor-pointer">
-              <Link href="/shop">STORE</Link>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#b89a82] transition-all group-hover:w-full"></span>
+              {/* <Link href="/shop">STORE</Link> */}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#b89a82] transition-all group-hover:w-full"></span>
             </li>
 
           </ul>

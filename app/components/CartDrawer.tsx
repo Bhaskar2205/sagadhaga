@@ -40,7 +40,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-[420px] bg-[#f7f4ef] z-[100]
+        className={`fixed top-0 right-0 h-full w-105 bg-[#f7f4ef] z-100
         shadow-2xl transition-transform duration-500 ease-out
         ${open ? "translate-x-0" : "translate-x-full"}`}
       >
@@ -65,7 +65,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
           )}
 
           {cart.map((item) => (
-            <div key={item.id} className="flex gap-4 items-center">
+            <div key={item.variantId} className="flex gap-4 items-center">
               <img
                 src={item.image}
                 alt={item.name}

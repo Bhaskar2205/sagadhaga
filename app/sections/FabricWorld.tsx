@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const fabrics = [
   {
-    city: "JAIPUR",
+    city: "JAIPUR BLOCK PRINT",
     image: "/fabrics/Jaipur.png",
     description:
       "Jaipur is known for centuries-old hand block printing where artisans carve intricate wooden blocks and stamp patterns onto fabric.",
@@ -15,31 +15,31 @@ const fabrics = [
     materials: ["Cotton", "Natural Dyes", "Hand Block Printing"],
   },
   {
-    city: "VARANASI",
-    image: "/fabrics/Varanasi.jpg",
+    city: "BAGRU PRINT",
+    image: "/fabrics/Varanasi.png",
     description:
-      "Varanasi silk is one of the most luxurious textiles in the world, woven with intricate patterns and gold zari threads.",
+      "This craft uses natural dyes and hand-carved wooden blocks to create timeless designs on fabric. Each piece reflects the beauty of slow, sustainable craftsmanship",
     sourcing:
-      "Handwoven by master weavers along the ghats of Varanasi.",
-    materials: ["Silk", "Gold Zari", "Handloom Weaving"],
+      "Authentically sourced from skilled artisans in Bagru, Rajasthan, preserving heritage craftsmanship.",
+    materials: ["🌸 Chiffon / Georgette", "🌾 Linen", "🌿 Cotton"],
   },
   {
-    city: "KASHMIR",
-    image: "/fabrics/Kashmir.jpg",
+    city: "DABU PRINT",
+    image: "/fabrics/Dabu.jpeg",
     description:
-      "Kashmir fabrics are celebrated for their warmth and delicate embroidery inspired by Himalayan nature.",
+      "A resist-printing technique using mud paste to create unique layered patterns, often seen in indigo and earthy shades.",
     sourcing:
-      "Created by Kashmiri artisans using centuries-old weaving traditions.",
-    materials: ["Pashmina", "Wool", "Hand Embroidery"],
+      "Traditionally sourced from artisan communities in Rajasthan.",
+    materials: ["🧵 Cotton", "✨ Silk", "🌸 Chanderi"],
   },
   {
-    city: "KANCHIPURAM",
-    image: "/fabrics/Kanchipuram.jpg",
+    city: " SAGANERI PRINT",
+    image: "/fabrics/Sang.png",
     description:
-      "Kanchipuram silk is famous for temple motifs and vibrant weaving traditions from South India.",
+      "Famous for delicate floral patterns, fine lines, and bright or pastel colors—perfect for elegant and detailed designs.",
     sourcing:
-      "Handwoven in Tamil Nadu by generational weaving communities.",
-    materials: ["Mulberry Silk", "Gold Zari", "Temple Weaving"],
+      "Authentically sourced from skilled artisans of Sanganer, Jaipur",
+    materials: ["🧵 Cotton", "✨ Silk", "🌼 Mulmul (Fine Cotton)"],
   },
 ];
 
@@ -66,7 +66,7 @@ export default function FabricWorld() {
       {/* Scroll Progress Indicator */}
       <motion.div
         style={{ scaleY: scrollYProgress }}
-        className="fixed right-6 top-0 h-full w-[2px] bg-[#cbb7a4] origin-top z-50"
+        className="fixed right-6 top-0 h-full w-0.5 bg-[#cbb7a4] origin-top z-50"
       />
 
       <div className="sticky top-0 h-screen flex flex-col md:flex-row">
@@ -97,7 +97,7 @@ export default function FabricWorld() {
               />
 
               {/* luxury lighting overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-black/15 via-transparent to-transparent"></div>
 
               {/* fabric texture glow */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]"></div>
@@ -111,7 +111,7 @@ export default function FabricWorld() {
         {/* RIGHT CONTENT */}
         <div className="md:w-1/2 w-full flex items-center justify-center px-10 md:px-20 py-16">
 
-          <div className="max-w-xl w-full min-h-[420px] relative">
+          <div className="max-w-xl w-full min-h-105 relative">
 
             {fabrics.map((fabric, i) => (
 
