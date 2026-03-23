@@ -36,13 +36,14 @@ export default function Shop() {
 
         {products.map((product) => {
 
-          const formattedProduct = {
-            id: product.id,
-            name: product.title, // fix name
-            price: Number(product.price),
-            image: product.image,
-            variantId: product.variantId // important for Shopify cart
-          };
+const formattedProduct = {
+  id: product.id,
+  name: product.title,
+  price: product.price,
+  image: product.image,
+  variantId: product.variantId,
+  quantity: 1, 
+};
 
           return (
 
