@@ -1,3 +1,8 @@
+import {
+  getStorefrontQueryForSlug,
+  type CategorySlug,
+} from "./categoryTags";
+
 // ALL PRODUCTS
 export async function getProducts() {
 
@@ -60,61 +65,7 @@ export async function getProducts() {
   }));
 }
 
-
-export async function getJewelleryProducts() {
-
-  const res = await fetch(
-    `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token":
-          process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
-      },
-      body: JSON.stringify({
-        query: `
-        {
-          products(first: 20, query: "tag:jewellery") {
-            edges {
-              node {
-                id
-                title
-                handle
-                description
-
-                images(first: 2) {
-                  edges {
-                    node {
-                      url
-                    }
-                  }
-                }
-
-                variants(first: 1) {
-                  edges {
-                    node {
-                      id
-                      price {
-                        amount
-                        currencyCode
-                      }
-                    }
-                  }
-                }
-
-              }
-            }
-          }
-        }
-        `,
-      }),
-      next: { revalidate: 60 },
-    }
-  );
-
-  const json = await res.json();
-
+function mapProductEdges(json: any) {
   return json.data.products.edges.map((p: any) => ({
     id: p.node.id,
     title: p.node.title,
@@ -128,8 +79,8 @@ export async function getJewelleryProducts() {
   }));
 }
 
-
-export async function getClothingProducts() {
+/** Single-tag filter (internal). */
+async function fetchProductsByTag(tag: string) {
 
   const res = await fetch(
     `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`,
@@ -143,7 +94,7 @@ export async function getClothingProducts() {
       body: JSON.stringify({
         query: `
         {
-          products(first: 20, query: "tag:clothing") {
+          products(first: 20, query: "tag:${tag}") {
             edges {
               node {
                 id
@@ -182,22 +133,14 @@ export async function getClothingProducts() {
   );
 
   const json = await res.json();
-
-  return json.data.products.edges.map((p: any) => ({
-    id: p.node.id,
-    title: p.node.title,
-    description: p.node.description,
-    handle: p.node.handle,
-    images: p.node.images.edges.map((img:any)=>img.node.url),
-
-    price: Number(p.node.variants.edges[0]?.node.price.amount || 0),
-    currency: p.node.variants.edges[0]?.node.price.currencyCode || null,
-    variantId: p.node.variants.edges[0]?.node.id || null
-  }));
+  return mapProductEdges(json);
 }
 
-
-export async function getHomeDecorProducts() {
+/**
+ * Arbitrary Storefront search string (e.g. `tag:a OR tag:b`).
+ * Used for group pages (Bedding, Kids, Accessories).
+ */
+async function fetchProductsByStorefrontQuery(searchQuery: string) {
 
   const res = await fetch(
     `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`,
@@ -211,7 +154,7 @@ export async function getHomeDecorProducts() {
       body: JSON.stringify({
         query: `
         {
-          products(first: 20, query: "tag:homedecor") {
+          products(first: 20, query: "${searchQuery}") {
             edges {
               node {
                 id
@@ -250,16 +193,21 @@ export async function getHomeDecorProducts() {
   );
 
   const json = await res.json();
+  return mapProductEdges(json);
+}
 
-  return json.data.products.edges.map((p: any) => ({
-    id: p.node.id,
-    title: p.node.title,
-    description: p.node.description,
-    handle: p.node.handle,
-    images: p.node.images.edges.map((img:any)=>img.node.url),
+/**
+ * Fetch products for a category URL slug (see `categoryTags.ts`).
+ * Single-tag queries use `fetchProductsByTag`; group pages use OR search strings.
+ */
+export async function getProductsByCategorySlug(slug: CategorySlug) {
+  const q = getStorefrontQueryForSlug(slug)!;
+  if (q.startsWith("tag:") && !q.includes(" OR ")) {
+    return fetchProductsByTag(q.slice("tag:".length));
+  }
+  return fetchProductsByStorefrontQuery(q);
+}
 
-    price: Number(p.node.variants.edges[0]?.node.price.amount || 0),
-    currency: p.node.variants.edges[0]?.node.price.currencyCode || null,
-    variantId: p.node.variants.edges[0]?.node.id || null
-  }));
+export async function getProductsByCategory(category: CategorySlug) {
+  return getProductsByCategorySlug(category);
 }

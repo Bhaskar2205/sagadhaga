@@ -16,12 +16,12 @@ export const categories: Category[] = [
       {
         name: "Bedsheets",
         image: "/images/bedsheets.jpg",
-        slug: "/bedding/bedsheets",
+        slug: "/category/bedding",
       },
       {
         name: "Bedcovers",
         image: "/images/bedcover.jpg",
-        slug: "/bedding/bedcovers",
+        slug: "/category/bedding",
       },
     ],
   },
@@ -31,12 +31,12 @@ export const categories: Category[] = [
       {
         name: "Bathrobes",
         image: "/images/bathrobes.jpg",
-        slug: "/clothing/bathrobes",
+        slug: "/category/clothing",
       },
       {
         name: "Towels",
         image: "/images/towels.jpg",
-        slug: "/clothing/towels",
+        slug: "/category/clothing",
       },
     ],
   },
@@ -46,12 +46,12 @@ export const categories: Category[] = [
       {
         name: "Baby Blankets",
         image: "/images/baby-blankets.jpg",
-        slug: "/kids/baby-blankets",
+        slug: "/category/kids",
       },
       {
         name: "Baby Bags",
         image: "/images/baby-bags.jpg",
-        slug: "/kids/baby-bags",
+        slug: "/category/kids",
       },
     ],
   },
@@ -61,12 +61,12 @@ export const categories: Category[] = [
       {
         name: "Tote Bags",
         image: "/images/tote-bags.jpg",
-        slug: "/accessories/tote-bags",
+        slug: "/category/accessories",
       },
       {
         name: "Pouches",
         image: "/images/pouches.jpg",
-        slug: "/accessories/pouches",
+        slug: "/category/accessories",
       },
     ],
   },
