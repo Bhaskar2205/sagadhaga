@@ -30,7 +30,7 @@ export const categories: Category[] = [
     slides: [
       {
         name: "Bathrobes",
-        image: "/images/bathrobes.jpg",
+        image: "/images/bathrobe.jpg",
         slug: "/category/clothing",
       },
       {

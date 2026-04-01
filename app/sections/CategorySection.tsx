@@ -1,14 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { categories } from "../lib/categories"
 
 export default function CategorySection() {
-  const router = useRouter()
-
   return (
     <section className="py-32 px-6 bg-[#f8f5f2]">
       {/* Heading */}
@@ -21,7 +19,6 @@ export default function CategorySection() {
         </h2>
       </div>
 
-      {/* Grid */}
       <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
         {categories.map((cat, i) => (
           <CategoryCard key={i} category={cat} />
@@ -31,13 +28,17 @@ export default function CategorySection() {
   )
 }
 
-/* ---------------- CARD COMPONENT ---------------- */
+/* ---------------- CARD ---------------- */
 
 function CategoryCard({ category }: any) {
   const [isHovered, setIsHovered] = useState(false)
   const [activeSlide, setActiveSlide] = useState(0)
+  const [brightness, setBrightness] = useState<number | null>(null)
+
+  const imgRef = useRef<HTMLImageElement | null>(null)
   const router = useRouter()
 
+  /* ---------- AUTO SLIDER ---------- */
   useEffect(() => {
     if (!isHovered) return
 
@@ -50,6 +51,56 @@ function CategoryCard({ category }: any) {
 
   const currentSlide = category.slides[activeSlide]
 
+  /* ---------- BRIGHTNESS DETECTION ---------- */
+  useEffect(() => {
+    const img = new window.Image()
+    img.crossOrigin = "anonymous"
+    img.src = currentSlide.image
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+
+      if (!ctx) return
+
+      canvas.width = img.width
+      canvas.height = img.height
+
+      ctx.drawImage(img, 0, 0)
+
+      const data = ctx.getImageData(0, 0, img.width, img.height).data
+
+      let r = 0,
+        g = 0,
+        b = 0
+
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i]
+        g += data[i + 1]
+        b += data[i + 2]
+      }
+
+      const totalPixels = data.length / 4
+
+      r = r / totalPixels
+      g = g / totalPixels
+      b = b / totalPixels
+
+      const avgBrightness = (r + g + b) / 3
+      setBrightness(avgBrightness)
+    }
+  }, [currentSlide.image])
+
+  /* ---------- DYNAMIC OVERLAY ---------- */
+  const overlayStrength =
+    brightness !== null
+      ? brightness > 160
+        ? "bg-black/60" // bright image → strong overlay
+        : brightness > 100
+        ? "bg-black/40"
+        : "bg-black/20" // dark image → light overlay
+      : "bg-black/30"
+
   return (
     <div
       onMouseEnter={() => {
@@ -60,26 +111,35 @@ function CategoryCard({ category }: any) {
       onClick={() => isHovered && router.push(currentSlide.slug)}
       className="relative h-[460px] rounded-[30px] overflow-hidden border border-[#e4ded7] bg-[#ece7e1] cursor-pointer group"
     >
-      {/* Background Image */}
-      <motion.div
-        key={currentSlide.image}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.8 }}
-        className="absolute inset-0"
-      >
-        <Image
-          src={currentSlide.image}
-          alt={currentSlide.name}
-          fill
-          className="object-cover"
-        />
-      </motion.div>
+      {/* IMAGE STACK (NO FLICKER) */}
+<div className="absolute inset-0">
+  {category.slides.map((slide: any, idx: number) => (
+    <motion.div
+      key={slide.image}
+      initial={false}
+      animate={{
+        opacity: isHovered && idx === activeSlide ? 1 : 0,
+      }}
+      transition={{ duration: 0.6 }}
+      className="absolute inset-0"
+    >
+      <Image
+        src={slide.image}
+        alt={slide.name}
+        fill
+        className="object-cover"
+        priority={idx === 0} // preload first image
+      />
+    </motion.div>
+  ))}
+</div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-500" />
+      {/* SMART OVERLAY */}
+      <div
+        className={`absolute inset-0 ${overlayStrength} opacity-0 group-hover:opacity-100 transition duration-500`}
+      />
 
-      {/* Main Category Name */}
+      {/* MAIN TEXT */}
       <motion.div
         animate={{
           y: isHovered ? -80 : 0,
@@ -88,12 +148,12 @@ function CategoryCard({ category }: any) {
         transition={{ duration: 0.5 }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <h3 className="text-[22px] tracking-[0.35em] text-[#3d3d3d] group-hover:text-white transition">
+        <h3 className="text-[22px] tracking-[0.35em] text-[#3d3d3d] group-hover:text-white transition duration-500 drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
           {category.name.toUpperCase()}
         </h3>
       </motion.div>
 
-      {/* Subcategory (Sliding Text) */}
+      {/* SUB TEXT */}
       <motion.div
         key={currentSlide.name}
         initial={{ opacity: 0, y: 20 }}
@@ -104,17 +164,17 @@ function CategoryCard({ category }: any) {
         transition={{ duration: 0.6 }}
         className="absolute bottom-12 left-10"
       >
-        <p className="text-white text-xl tracking-wide">
+        <p className="text-white text-xl tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
           {currentSlide.name}
         </p>
       </motion.div>
 
-      {/* Dots Indicator */}
+      {/* DOTS */}
       <div className="absolute bottom-6 right-6 flex gap-2">
         {category.slides.map((_: any, idx: number) => (
           <div
             key={idx}
-            className={`w-2 h-2 rounded-full transition ${
+            className={`w-2 h-2 rounded-full ${
               idx === activeSlide ? "bg-white" : "bg-white/40"
             }`}
           />
