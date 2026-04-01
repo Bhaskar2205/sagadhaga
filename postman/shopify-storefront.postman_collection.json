@@ -1,0 +1,298 @@
+{
+  "info": {
+    "name": "Shopify Storefront (Sagadhaga)",
+    "description": "Postman collection for the Shopify Storefront GraphQL calls used/planned in this project (products, cartCreate, cartLinesAdd).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "shop_domain",
+      "value": "YOUR_STORE.myshopify.com",
+      "type": "string"
+    },
+    {
+      "key": "storefront_token",
+      "value": "YOUR_STOREFRONT_ACCESS_TOKEN",
+      "type": "string"
+    },
+    {
+      "key": "cart_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "variant_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "quantity",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "menu_handle",
+      "value": "main-menu",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Query - Products (first 10)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetProducts { products(first: 10) { edges { node { id title handle images(first: 1) { edges { node { url } } } variants(first: 1) { edges { node { id price { amount currencyCode } } } } } } } }\",\"variables\":{}}"
+        }
+      }
+    },
+    {
+      "name": "Query - Products by tag (tag:jewellery)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetJewelleryProducts { products(first: 20, query: \\\"tag:jewellery\\\") { edges { node { id title handle description images(first: 2) { edges { node { url } } } variants(first: 1) { edges { node { id price { amount currencyCode } } } } } } } }\",\"variables\":{}}"
+        }
+      }
+    },
+    {
+      "name": "Query - Products by tag (tag:clothing)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetClothingProducts { products(first: 20, query: \\\"tag:clothing\\\") { edges { node { id title handle description images(first: 2) { edges { node { url } } } variants(first: 1) { edges { node { id price { amount currencyCode } } } } } } } }\",\"variables\":{}}"
+        }
+      }
+    },
+    {
+      "name": "Query - Products by tag (tag:homedecor)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetHomeDecorProducts { products(first: 20, query: \\\"tag:homedecor\\\") { edges { node { id title handle description images(first: 2) { edges { node { url } } } variants(first: 1) { edges { node { id price { amount currencyCode } } } } } } } }\",\"variables\":{}}"
+        }
+      }
+    },
+    {
+      "name": "Mutation - cartCreate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation cartCreate { cartCreate { cart { id checkoutUrl } userErrors { field message } } }\",\"variables\":{}}"
+        }
+      }
+    },
+    {
+      "name": "Mutation - cartLinesAdd (add 1 line)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { id checkoutUrl lines(first: 10) { edges { node { quantity merchandise { ... on ProductVariant { id title product { title } price { amount currencyCode } } } } } } } userErrors { field message } } }\",\"variables\":{\"cartId\":\"{{cart_id}}\",\"lines\":[{\"merchandiseId\":\"{{variant_id}}\",\"quantity\":{{quantity}}}]}}"
+        }
+      }
+    },
+    {
+      "name": "Query - (Planned) Collections (first 20)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetCollections { collections(first: 20) { edges { node { id title handle description } } } }\",\"variables\":{}}"
+        }
+      }
+    }
+    ,
+    {
+      "name": "Query - (Planned) Menu items (handle)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Storefront-Access-Token",
+            "value": "{{storefront_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://{{shop_domain}}/api/2024-01/graphql.json",
+          "protocol": "https",
+          "host": [
+            "{{shop_domain}}"
+          ],
+          "path": [
+            "api",
+            "2024-01",
+            "graphql.json"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetMenu($handle: String!) { menu(handle: $handle) { items { title url } } }\",\"variables\":{\"handle\":\"{{menu_handle}}\"}}"
+        }
+      }
+    }
+  ]
+}
