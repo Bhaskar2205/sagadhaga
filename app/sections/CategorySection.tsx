@@ -34,20 +34,30 @@ function CategoryCard({ category }: any) {
   const [isHovered, setIsHovered] = useState(false)
   const [activeSlide, setActiveSlide] = useState(0)
   const [brightness, setBrightness] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
-  const imgRef = useRef<HTMLImageElement | null>(null)
   const router = useRouter()
+
+  /* ---------- MOBILE DETECTION ---------- */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   /* ---------- AUTO SLIDER ---------- */
   useEffect(() => {
-    if (!isHovered) return
+    // Desktop → only on hover
+    // Mobile → always run
+    if (!isHovered && !isMobile) return
 
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % category.slides.length)
     }, 2200)
 
     return () => clearInterval(interval)
-  }, [isHovered, category.slides.length])
+  }, [isHovered, isMobile, category.slides.length])
 
   const currentSlide = category.slides[activeSlide]
 
@@ -60,12 +70,10 @@ function CategoryCard({ category }: any) {
     img.onload = () => {
       const canvas = document.createElement("canvas")
       const ctx = canvas.getContext("2d")
-
       if (!ctx) return
 
       canvas.width = img.width
       canvas.height = img.height
-
       ctx.drawImage(img, 0, 0)
 
       const data = ctx.getImageData(0, 0, img.width, img.height).data
@@ -81,7 +89,6 @@ function CategoryCard({ category }: any) {
       }
 
       const totalPixels = data.length / 4
-
       r = r / totalPixels
       g = g / totalPixels
       b = b / totalPixels
@@ -95,60 +102,78 @@ function CategoryCard({ category }: any) {
   const overlayStrength =
     brightness !== null
       ? brightness > 160
-        ? "bg-black/60" // bright image → strong overlay
+        ? "bg-black/60"
         : brightness > 100
         ? "bg-black/40"
-        : "bg-black/20" // dark image → light overlay
+        : "bg-black/20"
       : "bg-black/30"
 
   return (
     <div
       onMouseEnter={() => {
-        setIsHovered(true)
-        setActiveSlide(0)
+        if (!isMobile) {
+          setIsHovered(true)
+          setActiveSlide(0)
+        }
       }}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => isHovered && router.push(currentSlide.slug)}
+      onMouseLeave={() => {
+        if (!isMobile) setIsHovered(false)
+      }}
+      onClick={() => {
+        // ✅ MOBILE: direct navigation
+        if (isMobile) {
+          router.push(currentSlide.slug)
+        } else {
+          // ✅ DESKTOP: only when hovered
+          if (isHovered) router.push(currentSlide.slug)
+        }
+      }}
       className="relative h-[460px] rounded-[30px] overflow-hidden border border-[#e4ded7] bg-[#ece7e1] cursor-pointer group"
     >
       {/* IMAGE STACK (NO FLICKER) */}
-<div className="absolute inset-0">
-  {category.slides.map((slide: any, idx: number) => (
-    <motion.div
-      key={slide.image}
-      initial={false}
-      animate={{
-        opacity: isHovered && idx === activeSlide ? 1 : 0,
-      }}
-      transition={{ duration: 0.6 }}
-      className="absolute inset-0"
-    >
-      <Image
-        src={slide.image}
-        alt={slide.name}
-        fill
-        className="object-cover"
-        priority={idx === 0} // preload first image
-      />
-    </motion.div>
-  ))}
-</div>
+      <div className="absolute inset-0">
+        {category.slides.map((slide: any, idx: number) => (
+          <motion.div
+            key={slide.image}
+            initial={false}
+            animate={{
+              opacity:
+                (isHovered || isMobile) && idx === activeSlide ? 1 : 0,
+            }}
+            transition={{ duration: 0.6 }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={slide.image}
+              alt={slide.name}
+              fill
+              className="object-cover"
+              priority={idx === 0}
+            />
+          </motion.div>
+        ))}
+      </div>
 
       {/* SMART OVERLAY */}
       <div
-        className={`absolute inset-0 ${overlayStrength} opacity-0 group-hover:opacity-100 transition duration-500`}
+        className={`absolute inset-0 ${overlayStrength} ${
+          isHovered || isMobile ? "opacity-100" : "opacity-0"
+        } transition duration-500`}
       />
 
       {/* MAIN TEXT */}
       <motion.div
         animate={{
-          y: isHovered ? -80 : 0,
-          opacity: isHovered ? 0.25 : 1,
+          y: isHovered || isMobile ? -80 : 0,
+          opacity: isHovered || isMobile ? 0.25 : 1,
         }}
         transition={{ duration: 0.5 }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <h3 className="text-[22px] tracking-[0.35em] text-[#3d3d3d] group-hover:text-white transition duration-500 drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
+        <h3 className="text-[22px] tracking-[0.35em] text-[#3d3d3d] 
+        group-hover:text-white 
+        transition duration-500 
+        drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
           {category.name.toUpperCase()}
         </h3>
       </motion.div>
@@ -158,13 +183,14 @@ function CategoryCard({ category }: any) {
         key={currentSlide.name}
         initial={{ opacity: 0, y: 20 }}
         animate={{
-          opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : 20,
+          opacity: isHovered || isMobile ? 1 : 0,
+          y: isHovered || isMobile ? 0 : 20,
         }}
         transition={{ duration: 0.6 }}
         className="absolute bottom-12 left-10"
       >
-        <p className="text-white text-xl tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
+        <p className="text-white text-xl tracking-wide 
+        drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
           {currentSlide.name}
         </p>
       </motion.div>
