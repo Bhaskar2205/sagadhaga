@@ -140,7 +140,7 @@ async function fetchProductsByTag(tag: string) {
  * Arbitrary Storefront search string (e.g. `tag:a OR tag:b`).
  * Used for group pages (Bedding, Kids, Accessories).
  */
-async function fetchProductsByStorefrontQuery(searchQuery: string) {
+export async function getProductsByStorefrontQuery(searchQuery: string) {
 
   const res = await fetch(
     `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`,
@@ -205,7 +205,7 @@ export async function getProductsByCategorySlug(slug: CategorySlug) {
   if (q.startsWith("tag:") && !q.includes(" OR ")) {
     return fetchProductsByTag(q.slice("tag:".length));
   }
-  return fetchProductsByStorefrontQuery(q);
+  return getProductsByStorefrontQuery(q);
 }
 
 export async function getProductsByCategory(category: CategorySlug) {
