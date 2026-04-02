@@ -15,10 +15,12 @@ type NavItem = {
 
 function NestedAccordionLinks({
   items,
+  rootSlug,
   onNavigate,
   depth = 0,
 }: {
   items: NavItem[];
+  rootSlug: string;
   onNavigate?: () => void;
   depth?: number;
 }) {
@@ -37,6 +39,7 @@ function NestedAccordionLinks({
             <div className="mt-2 pl-3 border-l border-[#d8cec2]">
               <NestedAccordionLinks
                 items={item.children}
+                rootSlug={rootSlug}
                 onNavigate={onNavigate}
                 depth={depth + 1}
               />
@@ -45,7 +48,7 @@ function NestedAccordionLinks({
         ) : (
           <Link
             key={item.slug}
-            href={`/category/${item.slug}`}
+            href={`/category/${rootSlug}?filter=${item.slug}`}
             onClick={onNavigate}
             className={`text-xs tracking-wide hover:text-[#8b6f56] transition ${
               depth > 0 ? "text-neutral-600" : "text-[#3b3028]"
@@ -122,7 +125,10 @@ export default function Navbar() {
                     group-hover:opacity-100 group-hover:visible transition-all z-50"
                   >
                     <div className="rounded-xl border border-white/40 bg-white/95 backdrop-blur-md p-4 shadow-lg text-left">
-                      <NestedAccordionLinks items={item.children as NavItem[]} />
+                      <NestedAccordionLinks
+                        items={item.children as NavItem[]}
+                        rootSlug={item.slug}
+                      />
                     </div>
                   </div>
                 )}
@@ -202,6 +208,7 @@ export default function Navbar() {
                   <div className="pl-2 mt-2">
                     <NestedAccordionLinks
                       items={item.children as NavItem[]}
+                      rootSlug={item.slug}
                       onNavigate={() => setMobileMenu(false)}
                     />
                   </div>
