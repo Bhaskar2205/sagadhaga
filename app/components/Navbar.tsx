@@ -1,11 +1,66 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "../lib/cartStore";
 import CartDrawer from "./CartDrawer";
 import { CATEGORY_NAV } from "../lib/categoryTags";
+
+type NavItem = {
+  slug: string;
+  label: string;
+  children?: NavItem[];
+};
+
+function NestedAccordionLinks({
+  items,
+  rootSlug,
+  onNavigate,
+  depth = 0,
+}: {
+  items: NavItem[];
+  rootSlug: string;
+  onNavigate?: () => void;
+  depth?: number;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {items.map((item) =>
+        item.children?.length ? (
+          <details key={item.slug} className="group">
+            <summary
+              className="list-none cursor-pointer text-xs tracking-wide text-[#3b3028]
+              flex items-center justify-between gap-2"
+            >
+              <span>{item.label}</span>
+              <ChevronDown className="w-3 h-3 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="mt-2 pl-3 border-l border-[#d8cec2]">
+              <NestedAccordionLinks
+                items={item.children}
+                rootSlug={rootSlug}
+                onNavigate={onNavigate}
+                depth={depth + 1}
+              />
+            </div>
+          </details>
+        ) : (
+          <Link
+            key={item.slug}
+            href={`/category/${rootSlug}?filter=${item.slug}`}
+            onClick={onNavigate}
+            className={`text-xs tracking-wide hover:text-[#8b6f56] transition ${
+              depth > 0 ? "text-neutral-600" : "text-[#3b3028]"
+            }`}
+          >
+            {item.label}
+          </Link>
+        )
+      )}
+    </div>
+  );
+}
 
 export default function Navbar() {
 
@@ -59,25 +114,23 @@ export default function Navbar() {
               <li key={item.slug} className="relative group">
                 <Link
                   href={`/category/${item.slug}`}
-                  className="inline-block border-b border-transparent group-hover:border-[#b89a82] transition-colors pb-0.5"
+                  className="inline-flex items-center gap-1 border-b border-transparent group-hover:border-[#b89a82] transition-colors pb-0.5"
                 >
                   {item.label.toUpperCase()}
+                  {item.children?.length ? <ChevronDown className="w-3 h-3" /> : null}
                 </Link>
                 {item.children && (
-                  <ul
-                    className="absolute left-0 top-full pt-2 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 rounded-xl border border-white/40 bg-white/95 backdrop-blur-md py-2 shadow-lg text-left"
+                  <div
+                    className="absolute left-0 top-full pt-2 min-w-[260px] opacity-0 invisible
+                    group-hover:opacity-100 group-hover:visible transition-all z-50"
                   >
-                    {item.children.map((c) => (
-                      <li key={c.slug}>
-                        <Link
-                          href={`/category/${c.slug}`}
-                          className="block px-4 py-2 text-xs tracking-wide text-[#3b3028] hover:bg-[#f5efe6]"
-                        >
-                          {c.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                    <div className="rounded-xl border border-white/40 bg-white/95 backdrop-blur-md p-4 shadow-lg text-left">
+                      <NestedAccordionLinks
+                        items={item.children as NavItem[]}
+                        rootSlug={item.slug}
+                      />
+                    </div>
+                  </div>
                 )}
               </li>
             ))}
@@ -152,17 +205,12 @@ export default function Navbar() {
                   {item.label.toUpperCase()}
                 </Link>
                 {item.children && (
-                  <div className="flex flex-col gap-2 pl-2 mt-2">
-                    {item.children.map((c) => (
-                      <Link
-                        key={c.slug}
-                        href={`/category/${c.slug}`}
-                        className="text-xs tracking-wide text-neutral-600"
-                        onClick={() => setMobileMenu(false)}
-                      >
-                        {c.label}
-                      </Link>
-                    ))}
+                  <div className="pl-2 mt-2">
+                    <NestedAccordionLinks
+                      items={item.children as NavItem[]}
+                      rootSlug={item.slug}
+                      onNavigate={() => setMobileMenu(false)}
+                    />
                   </div>
                 )}
               </div>
