@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "../lib/cartStore";
@@ -68,6 +68,18 @@ export default function Navbar() {
   const [openCart, setOpenCart] = useState(false);
 
   const cart = useCartStore((state) => state.cart);
+  const hydrateCart = useCartStore((state) => state.hydrateCart);
+
+  useEffect(() => {
+    void hydrateCart();
+
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) void hydrateCart();
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, [hydrateCart]);
 
   return (
     <>

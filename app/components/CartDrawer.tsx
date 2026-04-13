@@ -13,7 +13,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
 
   // Fix total calculation
   const total = cart.reduce((sum, item) => {
-    return sum + Number(item.price);
+    return sum + Number(item.price) * item.quantity;
   }, 0);
 
   // Updated checkout
