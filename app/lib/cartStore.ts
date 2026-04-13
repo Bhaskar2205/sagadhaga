@@ -9,6 +9,8 @@ type CartStore = {
   cart: CartItem[];
   addToCart: (product: AddToCartInput) => Promise<void>;
   removeFromCart: (lineId: string) => Promise<void>;
+  /** Sets quantity for a cart line; use 0 to remove. Syncs with Shopify. */
+  setLineQuantity: (lineId: string, quantity: number) => Promise<void>;
   hydrateCart: () => Promise<void>;
 };
 
@@ -27,41 +29,42 @@ function runCartMutation<T>(fn: () => Promise<T>): Promise<T> {
 export const useCartStore = create<CartStore>((set) => ({
   cart: [],
 
-  hydrateCart: async () => {
-    if (typeof window === "undefined") return;
+  hydrateCart: async () =>
+    runCartMutation(async () => {
+      if (typeof window === "undefined") return;
 
-    const cartId = localStorage.getItem("cartId");
-    if (!cartId) {
-      set({ cart: [] });
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        `/api/cart?cartId=${encodeURIComponent(cartId)}`
-      );
-
-      if (res.status === 404) {
-        localStorage.removeItem("cartId");
-        localStorage.removeItem("checkoutUrl");
+      const cartId = localStorage.getItem("cartId");
+      if (!cartId) {
         set({ cart: [] });
         return;
       }
 
-      if (!res.ok) return;
+      try {
+        const res = await fetch(
+          `/api/cart?cartId=${encodeURIComponent(cartId)}`
+        );
 
-      const data: { checkoutUrl?: string; items: CartItem[] } =
-        await res.json();
+        if (res.status === 404) {
+          localStorage.removeItem("cartId");
+          localStorage.removeItem("checkoutUrl");
+          set({ cart: [] });
+          return;
+        }
 
-      if (data.checkoutUrl) {
-        localStorage.setItem("checkoutUrl", data.checkoutUrl);
+        if (!res.ok) return;
+
+        const data: { checkoutUrl?: string; items: CartItem[] } =
+          await res.json();
+
+        if (data.checkoutUrl) {
+          localStorage.setItem("checkoutUrl", data.checkoutUrl);
+        }
+
+        set({ cart: data.items ?? [] });
+      } catch {
+        // keep existing UI state on transient failures
       }
-
-      set({ cart: data.items ?? [] });
-    } catch {
-      // keep existing UI state on transient failures
-    }
-  },
+    }),
 
   addToCart: async (product) =>
     runCartMutation(async () => {
@@ -146,6 +149,49 @@ export const useCartStore = create<CartStore>((set) => ({
         set({ cart: data.items ?? [] });
       } catch (error) {
         console.error("Remove from cart error:", error);
+      }
+    }),
+
+  setLineQuantity: (lineId, quantity) =>
+    runCartMutation(async () => {
+      const cartId = localStorage.getItem("cartId");
+      if (!cartId || !lineId) return;
+
+      try {
+        let res: Response;
+        if (quantity < 1) {
+          res = await fetch("/api/cart/remove", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cartId, lineIds: [lineId] }),
+          });
+        } else {
+          res = await fetch("/api/cart/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cartId, lineId, quantity }),
+          });
+        }
+
+        if (res.status === 404) {
+          localStorage.removeItem("cartId");
+          localStorage.removeItem("checkoutUrl");
+          set({ cart: [] });
+          return;
+        }
+
+        if (!res.ok) return;
+
+        const data: { checkoutUrl?: string; items: CartItem[] } =
+          await res.json();
+
+        if (data.checkoutUrl) {
+          localStorage.setItem("checkoutUrl", data.checkoutUrl);
+        }
+
+        set({ cart: data.items ?? [] });
+      } catch (error) {
+        console.error("Set line quantity error:", error);
       }
     }),
 }));

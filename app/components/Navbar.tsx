@@ -70,6 +70,8 @@ export default function Navbar() {
   const cart = useCartStore((state) => state.cart);
   const hydrateCart = useCartStore((state) => state.hydrateCart);
 
+  const cartUnitCount = cart.reduce((n, item) => n + item.quantity, 0);
+
   useEffect(() => {
     void hydrateCart();
 
@@ -171,9 +173,9 @@ export default function Navbar() {
 
             <ShoppingBag size={20} />
 
-            {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#3b3028] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                {cart.length}
+            {cartUnitCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#3b3028] text-white text-xs min-w-5 h-5 px-1 flex items-center justify-center rounded-full">
+                {cartUnitCount > 99 ? "99+" : cartUnitCount}
               </span>
             )}
 

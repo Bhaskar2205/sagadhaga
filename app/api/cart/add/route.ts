@@ -21,7 +21,11 @@ export async function POST(req: Request) {
                     id
                     title
                     product {
+                      id
                       title
+                    }
+                    image {
+                      url
                     }
                     price {
                       amount
