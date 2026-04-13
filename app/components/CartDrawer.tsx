@@ -65,7 +65,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
           )}
 
           {cart.map((item) => (
-            <div key={item.variantId} className="flex gap-4 items-center">
+            <div key={item.lineId} className="flex gap-4 items-center">
               <img
                 src={item.image}
                 alt={item.name}
@@ -80,7 +80,8 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
                 </p>
 
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  type="button"
+                  onClick={() => void removeFromCart(item.lineId)}
                   className="text-xs text-neutral-500 hover:text-black mt-2 transition"
                 >
                   Remove

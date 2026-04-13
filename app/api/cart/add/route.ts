@@ -11,12 +11,14 @@ export async function POST(req: Request) {
         cart {
           id
           checkoutUrl
-          lines(first: 10) {
+          lines(first: 50) {
             edges {
               node {
+                id
                 quantity
                 merchandise {
                   ... on ProductVariant {
+                    id
                     title
                     product {
                       title

@@ -1,4 +1,5 @@
 import { shopifyFetch } from "@/app/lib/shopify";
+import { normalizeShopifyCartLines } from "@/app/lib/shopifyCartFormat";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -17,6 +18,7 @@ export async function GET(req: NextRequest) {
         lines(first: 50) {
           edges {
             node {
+              id
               quantity
               merchandise {
                 ... on ProductVariant {
@@ -49,31 +51,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Cart not found" }, { status: 404 });
   }
 
-  const items = cart.lines.edges.map(
-    (edge: {
-      node: {
-        quantity: number;
-        merchandise: {
-          id: string;
-          title: string;
-          price: { amount: string };
-          image: { url: string } | null;
-          product: { id: string; title: string };
-        };
-      };
-    }) => {
-      const { node } = edge;
-      const v = node.merchandise;
-      return {
-        id: v.product.id,
-        name: v.product.title,
-        price: Number(v.price.amount),
-        image: v.image?.url ?? "",
-        variantId: v.id,
-        quantity: node.quantity,
-      };
-    }
-  );
+  const items = normalizeShopifyCartLines(cart);
 
   return NextResponse.json({
     checkoutUrl: cart.checkoutUrl,

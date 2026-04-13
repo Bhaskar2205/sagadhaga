@@ -1,22 +1,18 @@
 import { create } from "zustand";
-
-type CartItem = {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  image: string;
-  variantId: string;
-};
+import {
+  type AddToCartInput,
+  type CartItem,
+  normalizeShopifyCartLines,
+} from "./shopifyCartFormat";
 
 type CartStore = {
   cart: CartItem[];
-  addToCart: (product: CartItem) => Promise<void>;
-  removeFromCart: (id: string) => void;
+  addToCart: (product: AddToCartInput) => Promise<void>;
+  removeFromCart: (lineId: string) => Promise<void>;
   hydrateCart: () => Promise<void>;
 };
 
-/** Serialize mutations so parallel add-to-cart never creates multiple Shopify carts. */
+/** Serialize mutations so cart create/add/remove never race each other. */
 let cartMutationQueue: Promise<void> = Promise.resolve();
 
 function runCartMutation<T>(fn: () => Promise<T>): Promise<T> {
@@ -108,32 +104,50 @@ export const useCartStore = create<CartStore>((set) => ({
           localStorage.setItem("checkoutUrl", updatedCart.checkoutUrl);
         }
 
-        set((state) => {
-          const existingItem = state.cart.find(
-            (item) => item.variantId === product.variantId
-          );
-
-          if (existingItem) {
-            return {
-              cart: state.cart.map((item) =>
-                item.variantId === product.variantId
-                  ? { ...item, quantity: item.quantity + 1 }
-                  : item
-              ),
-            };
-          }
-
-          return {
-            cart: [...state.cart, { ...product, quantity: 1 }],
-          };
-        });
+        set({ cart: normalizeShopifyCartLines(updatedCart) });
       } catch (error) {
         console.error("Add to cart error:", error);
       }
     }),
 
-  removeFromCart: (id) =>
-    set((state) => ({
-      cart: state.cart.filter((item) => item.id !== id),
-    })),
+  removeFromCart: (lineId) =>
+    runCartMutation(async () => {
+      const cartId = localStorage.getItem("cartId");
+      if (!cartId || !lineId) {
+        set((state) => ({
+          cart: state.cart.filter((item) => item.lineId !== lineId),
+        }));
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/cart/remove", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cartId, lineIds: [lineId] }),
+        });
+
+        if (res.status === 404) {
+          localStorage.removeItem("cartId");
+          localStorage.removeItem("checkoutUrl");
+          set({ cart: [] });
+          return;
+        }
+
+        if (!res.ok) return;
+
+        const data: { checkoutUrl?: string; items: CartItem[] } =
+          await res.json();
+
+        if (data.checkoutUrl) {
+          localStorage.setItem("checkoutUrl", data.checkoutUrl);
+        }
+
+        set({ cart: data.items ?? [] });
+      } catch (error) {
+        console.error("Remove from cart error:", error);
+      }
+    }),
 }));
+
+export type { CartItem, AddToCartInput } from "./shopifyCartFormat";
