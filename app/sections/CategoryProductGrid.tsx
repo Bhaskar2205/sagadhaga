@@ -19,7 +19,7 @@ export default function CategoryProductGrid({
   activeFilterSlug,
 }: Props) {
   return (
-    <section className="bg-[#f6f1e9] min-h-screen px-4 sm:px-6 md:px-12 lg:px-20 py-20 sm:py-24 md:py-28">
+    <section className="bg-[#f6f1e9] min-h-screen px-4 sm:px-6 md:px-12 lg:px-20 pt-32 sm:pt-36 md:pt-32 pb-20 sm:pb-24 md:pb-28">
 
       <div className="text-center mb-12 sm:mb-16 md:mb-20">
 
