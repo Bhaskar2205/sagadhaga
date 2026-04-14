@@ -74,6 +74,8 @@ function NestedAccordionLinks({
 }
 
 export default function Navbar() {
+  const hiddenMenuSlugs = new Set(["utilities-pouches", "jewels"]);
+  const navItems = CATEGORY_NAV.filter((item) => !hiddenMenuSlugs.has(item.slug));
 
   const [mobileMenu, setMobileMenu] = useState(false);
   const [openCart, setOpenCart] = useState(false);
@@ -135,7 +137,7 @@ export default function Navbar() {
               </Link>
             </li>
 
-            {CATEGORY_NAV.map((item) => (
+            {navItems.map((item) => (
               <li key={item.slug} className="relative group">
                 <Link
                   href={`/category/${item.slug}`}
@@ -159,15 +161,6 @@ export default function Navbar() {
                 )}
               </li>
             ))}
-
-            <li>
-              <Link
-                href="/shop"
-                className="inline-block border-b border-transparent hover:border-[#b89a82] transition-colors pb-0.5"
-              >
-                STORE
-              </Link>
-            </li>
 
           </ul>
 
@@ -220,7 +213,7 @@ export default function Navbar() {
           </div>
 
           <nav className="flex flex-col gap-6 text-[#3b3028]">
-            {CATEGORY_NAV.map((item) => (
+            {navItems.map((item) => (
               <div key={item.slug} className="border-b border-[#c9b8a2]/40 pb-4">
                 {item.children?.length ? (
                   <details className="group [&[open]_.mobile-category-chevron]:rotate-180">
@@ -256,13 +249,6 @@ export default function Navbar() {
               </div>
             ))}
 
-            <Link
-              href="/shop"
-              className="text-sm tracking-[0.2em] pt-2"
-              onClick={() => setMobileMenu(false)}
-            >
-              STORE
-            </Link>
           </nav>
 
         </div>
