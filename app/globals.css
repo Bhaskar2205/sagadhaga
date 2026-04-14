@@ -25,17 +25,12 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Keep accidental horizontal overflow hidden without affecting sticky ancestors */
+  overflow-x: clip;
 }
 
 img,
