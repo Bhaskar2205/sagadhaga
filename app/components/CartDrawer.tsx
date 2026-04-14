@@ -36,11 +36,11 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
       />
 
       <div
-        className={`fixed top-0 right-0 h-full w-105 bg-[#f7f4ef] z-100
+        className={`fixed top-0 right-0 h-full w-full sm:w-[26rem] max-w-[100vw] bg-[#f7f4ef] z-100
         shadow-2xl transition-transform duration-500 ease-out
         ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="flex justify-between items-center px-8 py-6 border-b border-neutral-200">
+        <div className="flex justify-between items-center px-5 sm:px-8 py-6 border-b border-neutral-200">
           <h2 className="text-lg tracking-[0.2em] font-medium text-black">
             YOUR CART
           </h2>
@@ -54,7 +54,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
           </button>
         </div>
 
-        <div className="px-8 py-6 space-y-6 overflow-y-auto h-[65%]">
+        <div className="px-5 sm:px-8 py-6 space-y-6 overflow-y-auto h-[65%]">
           {cart.length === 0 && (
             <p className="text-neutral-500 text-sm">Your cart is empty</p>
           )}
@@ -109,7 +109,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
           ))}
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full border-t border-neutral-200 px-8 py-6 bg-[#f7f4ef]">
+        <div className="absolute bottom-0 left-0 w-full border-t border-neutral-200 px-5 sm:px-8 py-6 bg-[#f7f4ef]">
           <div className="flex justify-between mb-4">
             <span className="text-sm text-neutral-600 tracking-wide">
               Subtotal
