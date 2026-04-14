@@ -84,7 +84,7 @@ function ShopProductCard({
         className={`absolute bottom-[110px] left-1/2 -translate-x-1/2 z-10 transition duration-300 ${
           inCartQty > 0
             ? "opacity-100"
-            : "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
+            : "opacity-100 md:opacity-0 md:group-hover:opacity-100 pointer-events-auto md:pointer-events-none md:group-hover:pointer-events-auto"
         }`}
       >
         <ProductCartControls

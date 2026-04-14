@@ -1,7 +1,7 @@
 "use client";
 
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { type AddToCartInput, useCartStore } from "../lib/cartStore";
 import type { CartItem } from "../lib/shopifyCartFormat";
 
@@ -25,6 +25,15 @@ export default function CartLineQtyControls({
   const addToCart = useCartStore((s) => s.addToCart);
   const removeFromCart = useCartStore((s) => s.removeFromCart);
   const [pending, startTransition] = useTransition();
+  const [removePressed, setRemovePressed] = useState(false);
+
+  const triggerRemove = () => {
+    setRemovePressed(true);
+    window.setTimeout(() => {
+      startTransition(() => void removeFromCart(line.lineId));
+      setRemovePressed(false);
+    }, 120);
+  };
 
   return (
     <div
@@ -81,10 +90,19 @@ export default function CartLineQtyControls({
           type="button"
           disabled={pending}
           aria-label="Remove from cart"
-          onClick={() =>
-            startTransition(() => void removeFromCart(line.lineId))
-          }
-          className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full text-neutral-500 hover:bg-red-50 hover:text-red-700 transition disabled:opacity-40"
+          onPointerDown={() => setRemovePressed(true)}
+          onPointerUp={() => setRemovePressed(false)}
+          onPointerLeave={() => setRemovePressed(false)}
+          onPointerCancel={() => setRemovePressed(false)}
+          onTouchStart={() => setRemovePressed(true)}
+          onTouchEnd={() => setRemovePressed(false)}
+          onTouchCancel={() => setRemovePressed(false)}
+          onClick={triggerRemove}
+          className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-full transition md:hover:bg-red-50 md:hover:text-red-700 disabled:opacity-40 ${
+            removePressed
+              ? "bg-red-50 text-red-700"
+              : "text-neutral-500 active:bg-red-50 active:text-red-700"
+          }`}
         >
           <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
