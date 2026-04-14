@@ -18,30 +18,37 @@ function NestedAccordionLinks({
   rootSlug,
   onNavigate,
   depth = 0,
+  mobile = false,
 }: {
   items: NavItem[];
   rootSlug: string;
   onNavigate?: () => void;
   depth?: number;
+  mobile?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col ${mobile ? "gap-2.5" : "gap-2"}`}>
       {items.map((item) =>
         item.children?.length ? (
-          <details key={item.slug} className="group">
+          <details key={item.slug} className="group [&[open]_.subcategory-chevron]:rotate-180">
             <summary
-              className="list-none cursor-pointer text-xs tracking-wide text-[#3b3028]
-              flex items-center justify-between gap-2"
+              className={`list-none cursor-pointer text-[#3b3028]
+              flex items-center justify-between gap-2 ${
+                mobile
+                  ? "text-sm tracking-[0.08em] rounded-lg px-2 py-3 min-h-11"
+                  : "text-xs tracking-wide"
+              }`}
             >
               <span>{item.label}</span>
-              <ChevronDown className="w-3 h-3 transition-transform group-open:rotate-180" />
+              <ChevronDown className="subcategory-chevron w-3 h-3 transition-transform" />
             </summary>
-            <div className="mt-2 pl-3 border-l border-[#d8cec2]">
+            <div className={`mt-2 border-l border-[#d8cec2] ${mobile ? "pl-4 ml-1" : "pl-3"}`}>
               <NestedAccordionLinks
                 items={item.children}
                 rootSlug={rootSlug}
                 onNavigate={onNavigate}
                 depth={depth + 1}
+                mobile={mobile}
               />
             </div>
           </details>
@@ -50,8 +57,12 @@ function NestedAccordionLinks({
             key={item.slug}
             href={`/category/${rootSlug}?filter=${item.slug}`}
             onClick={onNavigate}
-            className={`text-xs tracking-wide hover:text-[#8b6f56] transition ${
+            className={`hover:text-[#8b6f56] transition ${
               depth > 0 ? "text-neutral-600" : "text-[#3b3028]"
+            } ${
+              mobile
+                ? "block rounded-lg px-2 py-3 text-sm tracking-[0.08em] min-h-11 flex items-center"
+                : "text-xs tracking-wide"
             }`}
           >
             {item.label}
@@ -211,21 +222,36 @@ export default function Navbar() {
           <nav className="flex flex-col gap-6 text-[#3b3028]">
             {CATEGORY_NAV.map((item) => (
               <div key={item.slug} className="border-b border-[#c9b8a2]/40 pb-4">
-                <Link
-                  href={`/category/${item.slug}`}
-                  className="text-sm tracking-[0.2em] font-medium block mb-2"
-                  onClick={() => setMobileMenu(false)}
-                >
-                  {item.label.toUpperCase()}
-                </Link>
-                {item.children && (
-                  <div className="pl-2 mt-2">
-                    <NestedAccordionLinks
-                      items={item.children as NavItem[]}
-                      rootSlug={item.slug}
-                      onNavigate={() => setMobileMenu(false)}
-                    />
-                  </div>
+                {item.children?.length ? (
+                  <details className="group [&[open]_.mobile-category-chevron]:rotate-180">
+                    <summary className="list-none cursor-pointer text-sm tracking-[0.2em] font-medium py-2 min-h-11 flex items-center justify-between gap-2">
+                      <Link
+                        href={`/category/${item.slug}`}
+                        className="inline-flex items-center hover:text-[#8b6f56] transition"
+                        onClick={() => setMobileMenu(false)}
+                      >
+                        {item.label.toUpperCase()}
+                      </Link>
+                      <ChevronDown className="mobile-category-chevron w-4 h-4 transition-transform" />
+                    </summary>
+
+                    <div className="mt-2 pl-1">
+                      <NestedAccordionLinks
+                        items={item.children as NavItem[]}
+                        rootSlug={item.slug}
+                        onNavigate={() => setMobileMenu(false)}
+                        mobile
+                      />
+                    </div>
+                  </details>
+                ) : (
+                  <Link
+                    href={`/category/${item.slug}`}
+                    className="text-sm tracking-[0.2em] font-medium block py-2 min-h-11"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    {item.label.toUpperCase()}
+                  </Link>
                 )}
               </div>
             ))}
