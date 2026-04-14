@@ -48,11 +48,11 @@ export default function ProductCartControls({
           }
           className={
             variant === "shop"
-              ? "bg-black text-white px-6 py-2 text-sm tracking-widest transition hover:bg-neutral-800 disabled:opacity-50"
-              : "bg-black text-white text-sm px-6 py-2 rounded-full shadow-md transition active:scale-[0.98] md:bg-white md:text-black md:hover:bg-black md:hover:text-white disabled:opacity-50"
+              ? "bg-black text-white px-6 py-2 text-sm tracking-widest whitespace-nowrap transition hover:bg-neutral-800 disabled:opacity-50"
+              : "bg-black text-white text-sm px-6 py-2 rounded-full shadow-md whitespace-nowrap transition active:scale-[0.98] md:bg-white md:text-black md:hover:bg-black md:hover:text-white disabled:opacity-50"
           }
         >
-          <span className="inline-flex items-center gap-2">
+          <span className="inline-flex items-center gap-2 whitespace-nowrap">
             <ShoppingBag className="w-3.5 h-3.5 opacity-70" aria-hidden />
             {addLabel}
           </span>
