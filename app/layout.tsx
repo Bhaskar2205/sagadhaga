@@ -18,10 +18,18 @@ export default function RootLayout({
         <SmoothScroll>
           {children}
         </SmoothScroll>
- <Script
-          src="//code.tidio.co/w8civs8ci2vwf7psvjotbvkj84uxtjiy.js"
-          strategy="afterInteractive"
-        />
+<Script id="tidio-chat" strategy="afterInteractive">
+  {`
+    (function() {
+      if (typeof window !== "undefined") {
+        var script = document.createElement("script");
+        script.src = "https://code.tidio.co/w8civs8ci2vwf7psvjotbvkj84uxtjiy.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    })();
+  `}
+</Script>
       </body>
     </html>
   );
