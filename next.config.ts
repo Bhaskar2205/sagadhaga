@@ -13,21 +13,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value:
-              "script-src 'self' 'unsafe-inline' https://code.tidio.co https://*.tidio.co;",
-          },
-        ],
-      },
-    ];
-  },
-
 };
 
 export default nextConfig;

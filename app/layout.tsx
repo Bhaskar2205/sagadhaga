@@ -1,8 +1,8 @@
 import "./globals.css";
 import { ReactNode } from "react";
 import SmoothScroll from "./components/SmoothScroll";
-import Script from "next/script"
 import Navbar from "./components/Navbar";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -13,23 +13,22 @@ export default function RootLayout({
     <html lang="en">
       <body>
 
+        {/* NAVBAR */}
         <Navbar />
 
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
-<Script id="tidio-chat" strategy="afterInteractive">
-  {`
-    (function() {
-      if (typeof window !== "undefined") {
-        var script = document.createElement("script");
-        script.src = "https://code.tidio.co/w8civs8ci2vwf7psvjotbvkj84uxtjiy.js";
-        script.async = true;
-        document.body.appendChild(script);
-      }
-    })();
-  `}
-</Script>
+        {/* PAGE CONTENT */}
+        <main >
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
+        </main>
+
+        {/* TIDIO CHAT */}
+        <Script
+          src="//code.tidio.co/w8civs8ci2vwf7psvjotbvkj84uxtjiy.js"
+          strategy="afterInteractive"
+        />
+
       </body>
     </html>
   );
