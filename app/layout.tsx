@@ -19,13 +19,13 @@ export default function RootLayout({
         {/* PAGE CONTENT */}
         <main >
           <SmoothScroll>
-            {children}
+            {children}     
           </SmoothScroll>
         </main>
 
         {/* TIDIO CHAT */}
         <Script
-          src="//code.tidio.co/w8civs8ci2vwf7psvjotbvkj84uxtjiy.js"
+          src="//code.tidio.co/yd5d43zdyvthd1ibbaxezulfdgztpek7.js"
           strategy="afterInteractive"
         />
 
